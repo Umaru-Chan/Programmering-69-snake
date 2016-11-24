@@ -39,7 +39,7 @@ public class Parser {
  				String str = parseEncodingDifference(loadHTML(s));
  				if(str.contains(toFind))
  				{
- 					System.out.println("found ["+toFind+"] in url ["+s+"]");
+ 					System.out.println("found [ "+toFind+" ] in url [ "+s+" ]");
  					return;
  				} 				
  			}
