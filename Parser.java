@@ -101,6 +101,7 @@ public class Parser {
 		return result.toString();
 	}
 	
+	
 	/**
 	 * misstänker att jag kommer att använda denna funktion ett par gånger på olika ställen så gör bara en funktion av det.
 	 * problemet med list.toArray() är att den metoden returnerar en array med java.lang.Object och java gillar tydligen inte att
