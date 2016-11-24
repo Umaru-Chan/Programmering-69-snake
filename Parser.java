@@ -14,7 +14,7 @@ public class Parser {
 	public static void main(String[]args)
 	{
 		Parser p = new Parser();
-		p.findString("http://www.fredrika.se/", "snö");
+		p.findString("https://en.wikipedia.org/wiki/Javadoc", "presentation");
 	}
 	
 	public Parser() {
@@ -29,10 +29,10 @@ public class Parser {
 		}
 		
 		//om man inte hittade strängen på första sidan så får man fortsätta leta
- 		boolean found = false;
+ 		
  		List<String> p = new ArrayList<>();
  		String[] pages = findURLs(html);
- 		while(!found)
+ 		while(true)
  		{
  			for(String s : pages)
  			{
@@ -150,10 +150,11 @@ public class Parser {
 					//man kan argumentera för att jag bör kolla efter hela karaktärsföljden men jag orkar inte skriva allt
 					c += 6; //hoppa till där länken börjar (skippa " href=" ")
 					//lägg till länken
-					while(temp.charAt(c) != '"')url.append(temp.charAt(c++));
+					while(temp.charAt(c) != '"' && c < temp.length() - 1)url.append(temp.charAt(c++));
 					//det går att ha annat i href, t.ex. mailadresser
 					
-					if(contains(url.toString(), "https://"))result.add(url.toString());
+					if(contains(url.toString(), "http://") || contains(url.toString(), "https://"))result.add(url.toString());
+						
 					continue;
 				}
 			}
@@ -174,12 +175,13 @@ public class Parser {
 	{
 		for(int i = 0; i < str.length() - lookFor.length(); i++)
 		{
-			for(int j = i; j < i + lookFor.length(); j++)
+			boolean exists = true;
+			for(int j = 0; j < lookFor.length(); j++)
 			{
-				if(str.charAt(i + j) != lookFor.charAt(j))break;
 
-				return true;
+				if(str.charAt(i + j) != lookFor.charAt(j)){exists = false;}
 			}
+			if(exists)return true;
 		}
 		return false;
 	}
