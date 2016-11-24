@@ -21,6 +21,12 @@ public class Parser {
 	public Parser() {
 	}
 
+	/**
+	 * hitta Strängen toFind i html källan nedladdad från url. Om toFind inte hittas så letar programmet vidare på alla
+	 * länkar som hittas i " <a ... href="url" ... ".
+	 * @param url
+	 * @param toFind
+	 */
 	public void findString(String url, String toFind) {
 		String html = parseEncodingDifference(loadHTML(url));
 		if(html.contains(toFind))
@@ -74,7 +80,7 @@ public class Parser {
 
 			String temp;
 			while ((temp = in.readLine()) != null)
-				result += temp + "\n"; 	// vet inte varför dom har gjort så att man kan addera strings (inte primitiva datatyper),
+				result += temp; 		// vet inte varför dom har gjort så att man kan addera strings (inte primitiva datatyper),
 										// men det kan man tydligen
 		} catch (Exception e) {
 			System.err.println("ajajaj, ngt gick åt helvete! " + e.getMessage());
@@ -94,10 +100,10 @@ public class Parser {
 		StringBuilder result = new StringBuilder();
 		for(int i = 0; i < in.length() - 1; i++)
 		{
-			if(in.charAt(i) == 'Ã' && in.charAt(i + 1) == '¥'){result.append('å'); i++;}
+			     if(in.charAt(i) == 'Ã' && in.charAt(i + 1) == '¥'){result.append('å'); i++;}
 			else if(in.charAt(i) == 'Ã' && in.charAt(i + 1) == '¤'){result.append('ä'); i++;}
-			else if(in.charAt(i) == 'Ã' && (in.charAt(i + 1) == '¶' || in.charAt(i + 1) == '–')){result.append('ö'); i++;}
-			else result.append(in.charAt(i));
+			else if(in.charAt(i) == 'Ã' &&(in.charAt(i + 1) == '¶' || in.charAt(i + 1) == '–')){result.append('ö'); i++;}
+			else    result.append(in.charAt(i));
 		}
 		return result.toString();
 	}
@@ -137,9 +143,9 @@ public class Parser {
 																		href= "hejsan.com"  > ...
 																		href="hejsan.com"   > ...
 			*/
-			for(int c = 0; c < temp.length(); c++)if(temp.charAt(c) ==  ' '){temp.deleteCharAt(c); c--;}
-											 else if(temp.charAt(c) == '\t'){temp.deleteCharAt(c); c--;}
-											 else if(temp.charAt(c) == '\n'){temp.deleteCharAt(c); c--;}
+			for(int c = 0; c < temp.length(); c++)if(temp.charAt(c) ==  ' ')temp.deleteCharAt(c--);
+											 else if(temp.charAt(c) == '\t')temp.deleteCharAt(c--);
+											 else if(temp.charAt(c) == '\n')temp.deleteCharAt(c--);
 			//System.out.println(temp.toString());
 			
 			for(int c = 0; c < temp.length() - "href=\"".length(); c++)
@@ -153,9 +159,7 @@ public class Parser {
 					//lägg till länken
 					while(temp.charAt(c) != '"' && c < temp.length() - 1)url.append(temp.charAt(c++));
 					//det går att ha annat i href, t.ex. mailadresser
-					
 					if(contains(url.toString(), "http://") || contains(url.toString(), "https://"))result.add(url.toString());
-						
 					continue;
 				}
 			}
@@ -164,7 +168,6 @@ public class Parser {
 	}
 	
 	/**
-	 * 
 	 * problemet med contains metoden i string är att den letar efter ord med mellanslag mellan sig. den funkade inte 
 	 * för det endamål som jag använder denhär funktionen till iaf.
 	 * 
@@ -178,10 +181,7 @@ public class Parser {
 		{
 			boolean exists = true;
 			for(int j = 0; j < lookFor.length(); j++)
-			{
-
-				if(str.charAt(i + j) != lookFor.charAt(j)){exists = false;}
-			}
+				if(str.charAt(i + j) != lookFor.charAt(j))exists = false;
 			if(exists)return true;
 		}
 		return false;
