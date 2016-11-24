@@ -15,7 +15,7 @@ public class Parser {
 	public static void main(String[]args)
 	{
 		Parser p = new Parser();
-		p.findString("https://en.wikipedia.org/wiki/Javadoc", "presentation");
+		p.findString("http://www.fredrika.se/", "presentationn");
 	}
 	
 	public Parser() {
@@ -57,6 +57,11 @@ public class Parser {
  				for(int i = 0; i < temp.length; i++)p.add(temp[i]);
  			}
  			pages = toStringArray(p);
+ 			if(pages.length == 0)
+ 			{
+ 				System.err.println("hittade inte strängen :/");
+ 				return;
+ 			}
  		}
 	}
 
