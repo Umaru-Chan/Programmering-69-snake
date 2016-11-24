@@ -7,6 +7,7 @@ import java.util.List;
 /**
  * 
  * @author Alexander
+ * @version 2.0
  *
  */
 public class Parser {
