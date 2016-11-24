@@ -4,12 +4,17 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 
+ * @author Alexander
+ *
+ */
 public class Parser {
 	
 	public static void main(String[]args)
 	{
 		Parser p = new Parser();
-		p.findString("http://www.fredrika.se/", "hej");
+		p.findString("http://www.fredrika.se/", "snÃ¶");
 	}
 	
 	public Parser() {
@@ -19,11 +24,11 @@ public class Parser {
 		String html = parseEncodingDifference(loadHTML(url));
 		if(html.contains(toFind))
 		{
-			System.out.println("Strängen hittades i första sidan!\t\t" + url);
+			System.out.println("StrÃ¤ngen hittades i fÃ¶rsta sidan!\t\t" + url);
 			return;
 		}
 		
-		//om man inte hittade strängen på första sidan så får man fortsätta leta
+		//om man inte hittade strÃ¤ngen pÃ¥ fÃ¶rsta sidan sÃ¥ fÃ¥r man fortsÃ¤tta leta
  		boolean found = false;
  		List<String> p = new ArrayList<>();
  		String[] pages = findURLs(html);
@@ -51,10 +56,11 @@ public class Parser {
 	/**
 	 * 
 	 * PROBLEM:
-	 * om man laddar ner ett html doc så byts encodingen, 	å blir Ã¥
-	 * 														ä blir Ã¤
-	 * 														ö blir Ã¶ Eller Ã–
-	 * vet inte riktigt vad jag ska göra åt saken förutom att byta ut allt i koden
+	 * om man laddar ner ett html doc sÃ¥ byts encodingen, 	Ã¥ blir ÃƒÂ¥
+	 * 														Ã¤ blir ÃƒÂ¤
+	 * 														Ã¶ blir ÃƒÂ¶ Eller Ãƒâ€“
+	 * vet inte riktigt vad jag ska gÃ¶ra Ã¥t saken fÃ¶rutom att byta ut allt i koden,
+	 * jag Ã¤r Ã¤ven osÃ¤ker pÃ¥ om problemet Ã¤r detsamma mellan olika operativsystem.
 	 * 
 	 * @param url
 	 * @return
@@ -67,17 +73,17 @@ public class Parser {
 
 			String temp;
 			while ((temp = in.readLine()) != null)
-				result += temp + "\n"; 	// vet inte varför dom har gjort så att man kan addera strings (inte primitiva datatyper),
+				result += temp + "\n"; 	// vet inte varfÃ¶r dom har gjort sÃ¥ att man kan addera strings (inte primitiva datatyper),
 										// men det kan man tydligen
 		} catch (Exception e) {
-			System.err.println("ajajaj, ngt gick åt helvete! " + e.getMessage());
+			System.err.println("ajajaj, ngt gick Ã¥t helvete! " + e.getMessage());
 			//e.printStackTrace();
 		}
 		return result;
 	}
 	
 	/**
-	 * vet som sagt inte hur jag ska lösa problemet på ett annat sätt.
+	 * vet som sagt inte hur jag ska lÃ¶sa problemet pÃ¥ ett annat sÃ¤tt.
 	 * 	 												
 	 * @param in
 	 * @return
@@ -87,17 +93,17 @@ public class Parser {
 		StringBuilder result = new StringBuilder();
 		for(int i = 0; i < in.length() - 1; i++)
 		{
-			if(in.charAt(i) == 'Ã' && in.charAt(i + 1) == '¥'){result.append('å'); i++;}
-			else if(in.charAt(i) == 'Ã' && in.charAt(i + 1) == '¤'){result.append('ä'); i++;}
-			else if(in.charAt(i) == 'Ã' && (in.charAt(i + 1) == '¶' || in.charAt(i + 1) == '–')){result.append('ö'); i++;}
+			if(in.charAt(i) == 'Ãƒ' && in.charAt(i + 1) == 'Â¥'){result.append('Ã¥'); i++;}
+			else if(in.charAt(i) == 'Ãƒ' && in.charAt(i + 1) == 'Â¤'){result.append('Ã¤'); i++;}
+			else if(in.charAt(i) == 'Ãƒ' && (in.charAt(i + 1) == 'Â¶' || in.charAt(i + 1) == 'â€“')){result.append('Ã¶'); i++;}
 			else result.append(in.charAt(i));
 		}
 		return result.toString();
 	}
 	
 	/**
-	 * misstänker att jag kommer att använda denna funktion ett par gånger på olika ställen så gör bara en funktion av det.
-	 * problemet med list.toArray() är att den metoden returnerar en array med java.lang.Object och java gillar tydligen inte att
+	 * misstÃ¤nker att jag kommer att anvÃ¤nda denna funktion ett par gÃ¥nger pÃ¥ olika stÃ¤llen sÃ¥ gÃ¶r bara en funktion av det.
+	 * problemet med list.toArray() Ã¤r att den metoden returnerar en array med java.lang.Object och java gillar tydligen inte att
 	 * casta arrays.
 	 * 
 	 * @param l
@@ -111,20 +117,21 @@ public class Parser {
 	}
 	
 	/**
+	 * leta igenom ett html dokumment och hitta alla <a ... href = "url" ...
 	 * 
 	 * @param html
-	 * @return
+	 * @return en array med alla urls i html
 	 */
 	private String[] findURLs(String html)
 	{
-		//vet inte hur många jag kommer att hitta så man kan inte göra en array i början för att lagra alla resultat
+		//vet inte hur mÃ¥nga jag kommer att hitta sÃ¥ man kan inte gÃ¶ra en array i bÃ¶rjan fÃ¶r att lagra alla resultat
 		List<String> result = new ArrayList<>();
 		String[] lines = html.split("<a");
 		
 		for(int i = 0; i < lines.length; i++)
 		{
 			StringBuilder temp = new StringBuilder(lines[i]);
-			/*ta bort alla mellanslag så att man inte kan skriva <a ... href = "hejsan.com" > ...
+			/*ta bort alla mellanslag sÃ¥ att man inte kan skriva <a ... href = "hejsan.com" > ...
 																		href ="hejsan.com"  > ...
 																		href= "hejsan.com"  > ...
 																		href="hejsan.com"   > ...
@@ -140,18 +147,40 @@ public class Parser {
 				if(temp.charAt(c) == 'h' && temp.charAt(c+1) == 'r' && temp.charAt(c+2) == 'e' && temp.charAt(c+3) == 'f')
 				{
 					StringBuilder url = new StringBuilder();
-					//man kan argumentera för att jag bör kolla efter hela karaktärsföljden men jag orkar inte skriva allt
-					c += 6; //hoppa till där länken börjar (skippa " href=" ")
-					//lägg till länken
+					//man kan argumentera fÃ¶r att jag bÃ¶r kolla efter hela karaktÃ¤rsfÃ¶ljden men jag orkar inte skriva allt
+					c += 6; //hoppa till dÃ¤r lÃ¤nken bÃ¶rjar (skippa " href=" ")
+					//lÃ¤gg till lÃ¤nken
 					while(temp.charAt(c) != '"')url.append(temp.charAt(c++));
-					//det går att ha annat i href, t.ex. mailadresser
-					if(!result.contains("http://www"))result.add(url.toString());
+					//det gÃ¥r att ha annat i href, t.ex. mailadresser
+					
+					if(contains(url.toString(), "https://"))result.add(url.toString());
 					continue;
 				}
 			}
 		}
 		return toStringArray(result);
 	}
+	
+	/**
+	 * 
+	 * problemet med contains metoden i string Ã¤r att den letar efter ord med mellanslag mellan sig. den funkade inte 
+	 * fÃ¶r det endamÃ¥l som jag anvÃ¤nder denhÃ¤r funktionen till iaf.
+	 * 
+	 * @param str
+	 * @param lookFor
+	 * @return true om str inehÃ¥ller lookFor
+	 */
+	private boolean contains(String str, String lookFor)
+	{
+		for(int i = 0; i < str.length() - lookFor.length(); i++)
+		{
+			for(int j = i; j < i + lookFor.length(); j++)
+			{
+				if(str.charAt(i + j) != lookFor.charAt(j))break;
 
-
+				return true;
+			}
+		}
+		return false;
+	}
 }
